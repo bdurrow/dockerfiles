@@ -16,10 +16,6 @@ RUN groupadd --gid 1000 logstash && \
 RUN curl -Lo - https://artifacts.elastic.co/downloads/logstash/logstash-5.6.16.tar.gz | \
     tar zxf - -C /usr/share && \
     mv /usr/share/logstash-5.6.16 /usr/share/logstash && \
-    chown --recursive logstash:logstash /usr/share/logstash/ && \
-    chown -R logstash:root /usr/share/logstash && \
-    chmod -R g=u /usr/share/logstash && \
-    find /usr/share/logstash -type d -exec chmod g+s {} \; && \
     ln -s /usr/share/logstash /opt/logstash
 
 WORKDIR /usr/share/logstash
@@ -33,14 +29,18 @@ ADD config/pipelines.yml config/pipelines.yml
 ADD config/logstash-full.yml config/logstash.yml
 ADD config/log4j2.properties config/
 ADD pipeline/default.conf pipeline/logstash.conf
-RUN chown --recursive logstash:root config/ pipeline/
 
 # Ensure Logstash gets a UTF-8 locale by default.
 ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 
 # Place the startup wrapper script.
 ADD bin/docker-entrypoint /usr/local/bin/
-RUN chmod 0755 /usr/local/bin/docker-entrypoint
+
+# Fix permissions including openshift required permissions
+RUN chmod 0755 /usr/local/bin/docker-entrypoint && \
+    chown -R logstash:root /usr/share/logstash && \
+    chmod -R g=u /usr/share/logstash && \
+    find /usr/share/logstash -type d -exec chmod g+s {} \;
 
 USER 1000
 
