@@ -36,8 +36,8 @@ ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 # Place the startup wrapper script.
 ADD bin/docker-entrypoint /usr/local/bin/
 
-#Update plugins
-RUN bin/logstash-plugin update
+#Update jruby-openssl
+RUN /usr/share/logstash/vendor/jruby/bin/gem install jruby-openssl
 
 # Fix permissions including openshift required permissions
 RUN chmod 0755 /usr/local/bin/docker-entrypoint && \
