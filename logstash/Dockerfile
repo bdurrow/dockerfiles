@@ -36,6 +36,9 @@ ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 # Place the startup wrapper script.
 ADD bin/docker-entrypoint /usr/local/bin/
 
+#Update plugins
+RUN bin/logstash-plugin update
+
 # Fix permissions including openshift required permissions
 RUN chmod 0755 /usr/local/bin/docker-entrypoint && \
     chown -R logstash:root /usr/share/logstash && \
