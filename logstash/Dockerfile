@@ -21,7 +21,7 @@ RUN curl -Lo - https://artifacts.elastic.co/downloads/logstash/logstash-5.6.16.t
 WORKDIR /usr/share/logstash
 
 ENV ELASTIC_CONTAINER true
-ENV PATH=/usr/share/logstash/bin:$PATH
+ENV PATH=/usr/share/logstash/bin:$PATH:/usr/share/logstash/vendor/jruby/bin
 
 # Provide a minimal configuration, so that simple invocations will provide
 # a good experience.
