@@ -6,12 +6,11 @@
 # host system.
 env2yaml /usr/share/logstash/config/logstash.yml
 
-if [ -n "${PEM_CERT}" -a
-     -s "${PEM_CERT}" -a
-     -n "${PEM_KEY}" -a
-     -s "${PEM_KEY}" -a
-     -z "${PEM_TO_KEYSTORE_OUT}"
-   ]; then
+if [[ -n $PEM_CERT ]] &&
+   [[ -s $PEM_CERT ]] &&
+   [[ -n $PEM_KEY ]] &&
+   [[ -s $PEM_KEY ]] &&
+   [[ -z $PEM_TO_KEYSTORE_OUT ]] ; then
   echo "INFO: Building ${PEM_TO_KEYSTORE_OUT} from ${PEM_CERT} and ${PEM_KEY}"
 cat << RUBY_SCRIPT | /usr/bin/env ruby
 require 'openssl'
