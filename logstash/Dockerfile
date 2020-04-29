@@ -34,8 +34,8 @@ ADD pipeline/default.conf pipeline/logstash.conf
 # Ensure Logstash gets a UTF-8 locale by default.
 ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 
-#Update all plugins
-RUN DEBUG=1 JARS_SKIP='true' logstash-plugin update
+#Update logstash-input-http plugin
+RUN DEBUG=1 JARS_SKIP='true' logstash-plugin update logstash-input-http
 
 # Place the startup wrapper script.
 ADD bin/docker-entrypoint /usr/local/bin/
