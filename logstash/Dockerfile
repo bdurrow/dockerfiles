@@ -1,5 +1,6 @@
 # This Dockerfile was generated from templates/Dockerfile.j2
 FROM centos:7
+ARG build_version=6.0.1
 
 # Install Java and the "which" command, which is needed by Logstash's shell
 # scripts.
@@ -13,9 +14,9 @@ RUN groupadd --gid 1000 logstash && \
       logstash
 
 # Add Logstash itself.
-RUN curl -Lo - https://artifacts.elastic.co/downloads/logstash/logstash-5.6.16.tar.gz | \
+RUN curl -Lo - https://artifacts.elastic.co/downloads/logstash/logstash-${build_version}.tar.gz | \
     tar zxf - -C /usr/share && \
-    mv /usr/share/logstash-5.6.16 /usr/share/logstash && \
+    mv /usr/share/logstash-${build_version} /usr/share/logstash && \
     ln -s /usr/share/logstash /opt/logstash
 
 WORKDIR /usr/share/logstash
