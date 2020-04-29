@@ -6,6 +6,24 @@
 # host system.
 env2yaml /usr/share/logstash/config/logstash.yml
 
+if [[ -n $PEM_CERT ]] &&
+   [[ -s $PEM_CERT ]] &&
+   [[ -n $PEM_KEY ]] &&
+   [[ -s $PEM_KEY ]] &&
+   [[ -n $PEM_TO_KEYSTORE_OUT ]] ; then
+  echo "INFO: Building ${PEM_TO_KEYSTORE_OUT} from ${PEM_CERT} and ${PEM_KEY}"
+cat << RUBY_SCRIPT | /usr/bin/env ruby
+require 'openssl'
+pkcs12 = OpenSSL::PKCS12.create(
+  "changeit",
+  "server",
+  OpenSSL::PKey.read(File.read("${PEM_KEY}")),
+  OpenSSL::X509::Certificate.new(File.read("${PEM_CERT}"))
+)
+File.open("${PEM_TO_KEYSTORE_OUT}", 'w'){|f| f << pkcs12.to_der }
+RUBY_SCRIPT
+fi
+
 export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ $LS_JAVA_OPTS"
 
 if [[ -z $1 ]] || [[ ${1:0:1} == '-' ]] ; then
